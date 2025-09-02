@@ -19,7 +19,8 @@ import Image from 'next/image'
 import { usePathname } from "next/navigation"
 import useProject from "../../hooks/use-project"
 import { useTheme } from "next-themes"
-import { Plus, Bot, LayoutDashboard, Presentation, CreditCard } from "lucide-react";
+import { Plus, Bot, LayoutDashboard, Presentation, CreditCard,Sprout } from "lucide-react";
+import { url } from "inspector";
 
 const items = [
     {
@@ -31,6 +32,11 @@ const items = [
         title: "Q&A",
         url: '/QA',
         icon: Bot,
+    },
+    {
+        title:"Essence",
+        url:"/essence",
+        icon: Sprout,
     },
     {
         title: "Meetings",

@@ -77,7 +77,27 @@ const CodeReferences: React.FC<CodeReferencesProps> = ({ fileReferences }) => {
             'sql': 'sql',
             'sh': 'bash',
             'yml': 'yaml',
-            'yaml': 'yaml'
+            'yaml': 'yaml',
+            'v':'verilog',
+            'sv':'systemverilog',
+            'go':'go',
+            'rb':'ruby',
+            'php':'php',
+            'rs':'rust',
+            'swift':'swift',
+            'kt':'kotlin',
+            'dart':'dart',
+            'scala':'scala',
+            'hs':'haskell',
+            'lua':'lua',
+            'r':'r',
+            'pl':'perl',
+            'groovy':'groovy',
+            'makefile':'makefile',
+            'dockerfile':'dockerfile',
+            'ini':'ini',
+            'bat':'batch',
+            // Add more mappings as needed  
         };
         return languageMap[ext] || 'text';
     };

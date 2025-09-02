@@ -1,5 +1,5 @@
 'use client'
-
+import ToggleWithDropdown from '../dashboard/toggle-switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
@@ -99,6 +99,7 @@ const AskQuestionCard = () => {
     const [open, setOpen] = React.useState(false);
     const [question, setQuestion] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [crossRepoEnabled, setCrossRepoEnabled] = React.useState(false);
     const [fileReferences, setFileReferences] = React.useState<{
         fileName: string;
         sourceCode: string;
@@ -255,6 +256,10 @@ const AskQuestionCard = () => {
     >
       <AnimatedNeuronLogo size={32} />
       Ask a Question
+      <ToggleWithDropdown
+    crossRepoEnabled={crossRepoEnabled}
+    setCrossRepoEnabled={setCrossRepoEnabled}
+  />
     </CardTitle>
   </CardHeader>
   <CardContent>
