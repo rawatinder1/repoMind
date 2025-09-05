@@ -1,7 +1,9 @@
 Overview
+
 Neuron Repo is a Next.js application built using the T3 stack (Next.js, NextAuth.js, Prisma, Drizzle, Tailwind CSS, and tRPC). It allows users to connect GitHub repositories, manage projects, ask AI-powered questions about their code, and view commit history. The application uses Clerk for authentication and Google's Gemini API for AI functionalities including code summarization and embedding generation. The client-side utilizes TanStack React Query for data fetching and caching. Dependency management is handled via Bun.
 
 Modules/Components
+
 The application consists of several key modules:
 
 src/server/api/routers/project.ts: This file defines a tRPC router (projectRouter) handling project-related operations. These operations include creating, retrieving, and deleting projects, fetching commits, saving and retrieving questions and answers, and integrating with GitHub via external services (pollCommits and indexGithubRepo). It uses Prisma for database interaction, zod for input validation, and relies on authentication via ctx.user.
@@ -93,98 +95,6 @@ src/app/(protected)/meetings/page.tsx: Placeholder component for meetings page.
 src/app/_components/theme-toggle.tsx: Component for toggling application themes.
 
 src/app/sign-up/[[...sign-up]]/page.tsx: Sign-up page using Clerk.
-
-src/components/ui/accordion.tsx: Accordion component using Radix UI.
-
-src/components/ui/alert.tsx: Alert message component.
-
-src/components/ui/aspect-ratio.tsx: Aspect ratio component using Radix UI.
-
-src/app/sync-user/page.tsx: Synchronizes user data between Clerk and the local database.
-
-src/components/ui/alert-dialog.tsx: Alert Dialog component using Radix UI.
-
-src/components/ui/avatar.tsx: Avatar component using Radix UI.
-
-src/components/ui/badge.tsx: Badge component using Radix UI.
-
-src/components/ui/calendar.tsx: Calendar component using react-day-picker.
-
-src/components/ui/breadcrumb.tsx: Breadcrumb navigation component using Radix UI.
-
-src/components/ui/button.tsx: Reusable button component.
-
-src/components/ui/carousel.tsx: Carousel component using embla-carousel-react.
-
-src/components/ui/checkbox.tsx: Checkbox component using Radix UI.
-
-src/components/ui/command.tsx: Command palette component using cmdk.
-
-src/components/ui/card.tsx: Card component.
-
-src/components/ui/chart.tsx: Chart component using Recharts.
-
-src/components/ui/collapsible.tsx: Collapsible component using Radix UI.
-
-src/components/ui/dialog.tsx: Dialog component using Radix UI.
-
-src/components/ui/drawer.tsx: Drawer component using vaul.
-
-src/components/ui/dropdown-menu.tsx: Dropdown menu component using Radix UI.
-
-src/components/ui/form.tsx: Form component using react-hook-form and Radix UI.
-
-src/components/ui/input-otp.tsx: OTP input component using input-otp.
-
-src/components/ui/label.tsx: Label component using Radix UI.
-
-src/components/ui/pagination.tsx: Pagination component.
-
-src/components/ui/hover-card.tsx: Hover card component using Radix UI.
-
-src/components/ui/input.tsx: Input field component.
-
-src/components/ui/menubar.tsx: Menubar component using Radix UI.
-
-src/components/ui/navigation-menu.tsx: Navigation menu component using Radix UI.
-
-src/components/ui/progress.tsx: Progress bar component using Radix UI.
-
-src/components/ui/popover.tsx: Popover component using Radix UI.
-
-src/components/ui/radio-group.tsx: Radio group component using Radix UI.
-
-src/components/ui/scroll-area.tsx: Scroll area component using Radix UI.
-
-src/components/ui/sheet.tsx: Sheet/side drawer component using Radix UI.
-
-src/components/ui/skeleton.tsx: Skeleton loading component.
-
-src/components/ui/resizable.tsx: Resizable panel component using react-resizable-panels.
-
-src/components/ui/select.tsx: Select dropdown component using Radix UI.
-
-src/components/ui/separator.tsx: Separator component using Radix UI.
-
-src/components/ui/sidebar.tsx: Sidebar component using Radix UI.
-
-src/server/api/trpc.ts: Initializes the tRPC server, defines context, and procedures.
-
-src/components/ui/slider.tsx: Slider component using Radix UI.
-
-src/components/ui/table.tsx: Table component.
-
-src/components/ui/tabs.tsx: Tabs component using Radix UI.
-
-src/components/ui/toggle.tsx: Toggle component using Radix UI.
-
-src/components/ui/sonner.tsx: Toaster component using sonner.
-
-src/components/ui/switch.tsx: Switch component using Radix UI.
-
-src/components/ui/textarea.tsx: Textarea component.
-
-src/components/ui/toggle-group.tsx: Toggle group component using Radix UI.
 
 src/styles/globals.css: Global CSS styles for the application.
 
