@@ -104,3 +104,4 @@ model Commit {
     commitDate DateTime
     summary String
 }
+

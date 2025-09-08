@@ -131,58 +131,6 @@ ${code}
   return response.response.text();
 }
 
-/*
-
-export async function summariseCode(doc: Document) {
-  console.log("getting summary for", doc.metadata.source);
-  const code = doc.pageContent.slice(0, 10000); // limit to 10000 characters
-  
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o", // or "gpt-4o-mini" for faster/cheaper
-      messages: [
-        {
-          role: "user",
-          content: `You are a coding assistant that summarizes code files for developers.
-Your job is to explain the file's purpose, structure, and key logic clearly and concisely.
-
-Objective
----------
-- Provide a high-level summary of the file.
-- Highlight its main purpose, important functions/classes, and how it fits into a larger project.
-- Explain dependencies, imports, and external APIs if relevant.
-- Do not guess or invent functionality not visible in the file.
-
-Limits
-------
-- Do not hallucinate missing pieces of code.
-- If parts of the file depend on other files, mention the dependency but do not fabricate details about them.
-- If the file is mostly boilerplate or trivial, say so briefly.
-
-Output Format
--------------
-1. **High-level purpose** (1–2 sentences).
-2. **Key elements** (bullet list of functions/classes/exports).
-3. **Data flow / usage notes** (short explanation).
-4. **Dependencies / external usage** (if any).
-5. **Overall role in the project** (1–2 sentences).
-
-here is the code: ${code}
-
-RESTRICT THE SUMMARY TO MAX OF 100 words.`
-        }
-      ],
-      temperature: 0.2,
-      max_tokens: 200
-    });
-    
-    return response.choices[0]?.message?.content || "No summary generated";
-  } catch (error) {
-    console.error("Error in summariseCode:", error);
-    return "Failed to generate code summary";
-  }
-} 
-*/
 
 
 export async function generateEmbedding(summary:string){

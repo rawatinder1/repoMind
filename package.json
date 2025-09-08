@@ -69,6 +69,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "firebase": "^12.2.1",
     "git-filter-repo": "^0.0.30",
     "ignore": "^7.0.5",
     "input-otp": "^1.4.2",

@@ -19,7 +19,7 @@ const QAPage = () => {
   const isDark = resolvedTheme === "dark";
   const { data: questions, refetch } = api.project.getQuestions.useQuery({ projectId });
   const deleteQuestion = api.project.deleteQuestion.useMutation();
-
+  
   const handleDelete = (questionId: string) => {
     deleteQuestion.mutate(
       { questionId },
@@ -85,7 +85,7 @@ const QAPage = () => {
                 className={`${
                   isDark
                     ? "bg-zinc-800 text-zinc-100 border border-zinc-800"
-                    : "bg-red-50 text-zinc-900 border border-zinc-200"
+                    : "bg-green-100 text-zinc-900 border border-zinc-200"
                 } rounded-2xl shadow-sm hover:shadow-md transition-all duration-200`}
               >
                 <CardHeader className="pb-3">
@@ -113,10 +113,11 @@ const QAPage = () => {
                           <Button
                             size="sm"
                             variant="outline"
+                            
                             className={`${
                               isDark
                                 ? "border-blue-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
-                                : "border-zinc-300 bg-zinc-50 hover:bg-zinc-100 text-zinc-600"
+                                : "border-zinc-300 bg-blue-100 hover:bg-zinc-100 text-zinc-600"
                             } rounded-lg transition-all duration-200`}
                           >
                             <Eye className="h-4 w-4" />
@@ -163,27 +164,23 @@ const QAPage = () => {
                                 : "scrollbar-thin scrollbar-track-zinc-100 scrollbar-thumb-zinc-300"
                             }`}
                           >
-                            {question.answer && (
-                              <div
-                                className={`prose max-w-none ${
-                                  isDark
-                                    ? "prose-invert prose-zinc"
-                                    : "prose-zinc"
-                                }`}
-                              >
-                                <MDEditor.Markdown
-                                  source={question.answer}
-                                  className="bg-transparent"
-                                  style={{
-                                    backgroundColor: "transparent",
-                                    color: isDark ? "#e4e4e7" : "#27272a",
-                                  }}
-                                />
-                              </div>
-                            )}
+                          {question.answer && (
+                            <div className="prose max-w-none prose-zinc bg-slate-800 p-4 rounded-lg">
+                              <MDEditor.Markdown
+                                source={question.answer}
+                                className="text-gray-200"
+                                style={{
+                                  backgroundColor: "transparent",
+                                }}
+                              />
+                            </div>
+                          )}
+
                             <div className="h-4" />
                             {question.fileReference && (
+                              
                               <CodeReferences
+                              //@ts-ignore
                                 fileReferences={question.fileReference}
                               />
                             )}
@@ -199,7 +196,7 @@ const QAPage = () => {
                         className={`${
                           isDark
                             ? "border-red-400 bg-red-900/20 hover:bg-red-900/30 text-red-300"
-                            : "border-red-300 bg-red-50 hover:bg-red-100 text-red-600"
+                            : "border-red-400 bg-red-50 hover:bg-red-100 text-red-600"
                         } rounded-lg transition-all duration-200`}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -214,7 +211,7 @@ const QAPage = () => {
                       className={`p-4 rounded-xl ${
                         isDark
                           ? "bg-zinc-800 border border-blue-700"
-                          : "bg-zinc-50 border border-blue-700"
+                          : "bg-blue-50 border border-green-700"
                       }`}
                     >
                       <p

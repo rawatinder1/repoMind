@@ -44,8 +44,8 @@ export default function ToggleWithMultiSelect({
       {crossRepoEnabled && (
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-between">
-              Select Projects
+            <Button variant="outline" className="w-full justify-between text-black ">
+              SELECT 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent

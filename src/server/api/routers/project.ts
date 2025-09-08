@@ -1,7 +1,8 @@
-import {z} from "zod";
+import {string, z} from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 import { pollCommits } from "@/lib/github";
 import { indexGithubRepo } from "@/lib/github-loader";
+import { XOctagon } from "lucide-react";
 const projectRouter = createTRPCRouter({
     createProject: protectedProcedure.input(
         z.object({
@@ -138,7 +139,14 @@ const projectRouter = createTRPCRouter({
                     id:input.questionId
                 }
             })
-        })  
+        }),
+        archiveProject:protectedProcedure.input(z.object({projectId:z.string()})).mutation(async ({ctx,input})=>{
+            return await ctx.db.project.update({where:{id:input.projectId},data:{deletedAt:new Date()}});
+        }),
+        getTeamMembers:protectedProcedure.input(z.object({projectId:z.string()})).query(async ({ctx,input})=>{
+            return await ctx.db.userToProject.findMany({where:{projectId:input.projectId},include:{user:true}})
+        })
+
     });
     
 export {projectRouter}

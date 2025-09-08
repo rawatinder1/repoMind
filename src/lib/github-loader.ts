@@ -61,62 +61,111 @@ function generateCuid(): string {
     const randomPart = Math.random().toString(36).substring(2, 15);
     return `c${timestamp}${randomPart}`.substring(0, 25);
 }
-
-// Updated Solution 1 with better ID generation:
+// Updated Solution with Batching
 export const indexGithubRepo = async (projectId: string, githubUrl: string, githubToken?: string) => {
     const token = githubToken || process.env.GITHUB_TOKEN;
     
     const docs = await loadGithubRepo(githubUrl, token);
     const allEmbeddings = await generateEmbeddings(docs);
     
-    await Promise.allSettled(allEmbeddings.map(async (embedding, index) => {
-        console.log(`processing ${index} of ${allEmbeddings.length}`)
-        if (!embedding) return
-   
-        try {
-            const id = generateCuid();
-            const vectorString = `[${embedding.embedding.join(',')}]`;
-            
-            await db.$executeRaw`
-                INSERT INTO "SourceCodeEmbedding" (
-                    "id", 
-                    "summary", 
-                    "sourceCode", 
-                    "fileName", 
-                    "projectId", 
-                    "summaryEmbedding"
-                ) VALUES (
-                    ${id},
-                    ${embedding.summary},
-                    ${embedding.sourceCode},
-                    ${embedding.fileName},
-                    ${projectId},
-                    ${vectorString}::vector
-                )
-            `;
-            
-            console.log(`Successfully processed embedding ${index}`);
-        } catch (error) {
-            console.error(`Error processing embedding ${index}:`, error);
-        }
-    }));
-}
+    // Batch database insertions
+    const BATCH_SIZE = 2
+    const batches = [];
+    
+    for (let i = 0; i < allEmbeddings.length; i += BATCH_SIZE) {
+        batches.push(allEmbeddings.slice(i, i + BATCH_SIZE));
+    }
+    
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex];
+        console.log(`Processing batch ${batchIndex + 1} of ${batches.length} (${batch!.length} items)`);
         
-
+        await Promise.allSettled(batch!.map(async (embedding, index) => {
+            const globalIndex = batchIndex * BATCH_SIZE + index;
+            console.log(`Processing ${globalIndex + 1} of ${allEmbeddings.length}`);
+            
+            if (!embedding) return;
+            
+            try {
+                const id = generateCuid();
+                const vectorString = `[${embedding.embedding.join(',')}]`;
+                
+                await db.$executeRaw`
+                    INSERT INTO "SourceCodeEmbedding" (
+                        "id", 
+                        "summary", 
+                        "sourceCode", 
+                        "fileName", 
+                        "projectId", 
+                        "summaryEmbedding"
+                    ) VALUES (
+                        ${id},
+                        ${embedding.summary},
+                        ${embedding.sourceCode},
+                        ${embedding.fileName},
+                        ${projectId},
+                        ${vectorString}::vector
+                    )
+                `;
+                
+                console.log(`Successfully processed embedding ${globalIndex + 1}`);
+            } catch (error) {
+                console.error(`Error processing embedding ${globalIndex + 1}:`, error);
+            }
+        }));
+        
+        // Add delay between batches to be nice to the database
+        if (batchIndex < batches.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    }
+};
 
 async function generateEmbeddings(docs: Document[]) {
-    return await Promise.all(docs.map(async doc => {
-        const summary = await summariseCode(doc);
-        console.log(" Summary length:", summary?.length || 0);
-        console.log(" Summary preview:", summary?.substring(0, 200) + "...");
-        const embedding = await generateEmbedding(summary);
-        return {
-            summary,
-            embedding,
+    const BATCH_SIZE = 50; // Smaller batch size for API calls
+    const DELAY_MS = 1000; // 1 second delay between batches
+    const results = [];
+    
+    console.log(`Processing ${docs.length} documents in batches of ${BATCH_SIZE}`);
+    
+    for (let i = 0; i < docs.length; i += BATCH_SIZE) {
+        const batch = docs.slice(i, i + BATCH_SIZE);
+        const batchIndex = Math.floor(i / BATCH_SIZE);
+        const totalBatches = Math.ceil(docs.length / BATCH_SIZE);
+        
+        console.log(`Processing batch ${batchIndex + 1} of ${totalBatches} (${batch.length} documents)`);
+        
+        const batchResults = await Promise.all(batch.map(async (doc, index) => {
+            const globalIndex = i + index;
+            console.log(`  Processing document ${globalIndex + 1}/${docs.length}: ${doc.metadata.source}`);
             
-            sourceCode: JSON.parse(JSON.stringify(doc.pageContent)),
-            fileName: doc.metadata.source
+            try {
+                const summary = await summariseCode(doc);
+                console.log(`  Summary length: ${summary?.length || 0}`);
+                console.log(`  Summary preview: ${summary?.substring(0, 100)}...`);
+                
+                const embedding = await generateEmbedding(summary);
+                
+                return {
+                    summary,
+                    embedding,
+                    sourceCode: JSON.parse(JSON.stringify(doc.pageContent)),
+                    fileName: doc.metadata.source
+                };
+            } catch (error) {
+                console.error(`  Error processing document ${globalIndex + 1}:`, error);
+                return null;
+            }
+        }));
+        
+        results.push(...batchResults);
+        
+        // Add delay between batches to respect API rate limits
+        if (i + BATCH_SIZE < docs.length) {
+            console.log(`  Waiting ${DELAY_MS}ms before next batch...`);
+            await new Promise(resolve => setTimeout(resolve, DELAY_MS));
         }
-    }))
+    }
+    
+    return results;
 }
-

@@ -194,3 +194,4 @@ Generate a Mermaid.js sequence diagram that visualizes the key interactions and 
         return { mermaidCode: null, error: `Error generating diagram: ${err?.message ?? String(err)}` };
     }
 }
+

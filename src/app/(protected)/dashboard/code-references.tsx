@@ -66,7 +66,7 @@ const CodeReferences: React.FC<CodeReferencesProps> = ({ fileReferences }) => {
             'ts': 'typescript',
             'tsx': 'typescript',
             'py': 'python',
-            'java': 'java',
+            'java': 'java', 
             'cpp': 'cpp',
             'c': 'c',
             'css': 'css',
