@@ -13,22 +13,22 @@ const getBranch = async (url: string, token: string) => {
         const data = await res.json();
         if(res.ok){
     console.log('branch detected', data.default_branch);
-    return data.default_branch || 'main';
+    return data.default_branch ?? 'main';
 } else {
     return 'main'; // Add this
 }
     } catch { return 'main'; }
 };
 export const loadGithubRepo = async (githubUrl: string, githubToken?: string) => {
-    const token = githubToken || process.env.GITHUB_TOKEN;
+    const token = githubToken ?? process.env.GITHUB_TOKEN;
     
     if (!token) {
         console.warn('No GitHub token provided. This may result in rate limiting issues.');
     }
-    const currentBranch = await getBranch(githubUrl,token || '');
+    const currentBranch = await getBranch(githubUrl,token ?? '');
     const cleanUrl = githubUrl.replace('.git', '');
     const loader = new GithubRepoLoader(cleanUrl, {
-        accessToken: token || '',
+        accessToken: token ?? '',
         branch: currentBranch,
         recursive: true, // Start with non-recursive to avoid getting stuck
         maxConcurrency: 5, // Reduce concurrency to avoid overwhelming
@@ -40,8 +40,8 @@ export const loadGithubRepo = async (githubUrl: string, githubToken?: string) =>
             'yarn.lock',
             'pnpm-lock.yaml',
             'bun.lockb',
-            '.git/**/*',             // Skip git files
-            'dist/**/*',             // Skip build directories
+            '.git/**/*',            
+            'dist/**/*',             
             'build/**/*',
             '*.log',
             '*.tmp'
@@ -63,7 +63,7 @@ function generateCuid(): string {
 }
 // Updated Solution with Batching
 export const indexGithubRepo = async (projectId: string, githubUrl: string, githubToken?: string) => {
-    const token = githubToken || process.env.GITHUB_TOKEN;
+    const token = githubToken ?? process.env.GITHUB_TOKEN;
     
     const docs = await loadGithubRepo(githubUrl, token);
     const allEmbeddings = await generateEmbeddings(docs);

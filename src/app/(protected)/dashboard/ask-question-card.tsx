@@ -6,6 +6,8 @@ import MDEditor from '@uiw/react-md-editor';
 import useProject from '@/hooks/use-project';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Button as StatefulButton} from "@/components/ui/stateful-button";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { askQuestion } from './actions';
 import { readStreamableValue } from '@ai-sdk/rsc';
@@ -256,10 +258,7 @@ const AskQuestionCard = () => {
     >
       <AnimatedNeuronLogo size={32} />
       Ask a Question
-      <ToggleWithDropdown
-    crossRepoEnabled={crossRepoEnabled}
-    setCrossRepoEnabled={setCrossRepoEnabled}
-  />
+      
     </CardTitle>
   </CardHeader>
   <CardContent>
@@ -272,7 +271,7 @@ const AskQuestionCard = () => {
         className={`min-h-[100px] resize-none rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-200 ${
           !isDark
             ? "bg-zinc-800 text-zinc-100 placeholder-zinc-400 border border-zinc-700 focus:ring-zinc-500 focus:border-zinc-500"
-            : "bg-zinc-50 text-zinc-900 placeholder-zinc-500 border border-zinc-300 focus:ring-zinc-400 focus:border-zinc-400"
+            : "bg-zinc-50 text-white placeholder-zinc-500 border border-zinc-300 focus:ring-zinc-400 focus:border-zinc-400"
         }`}
       />
       <div className="h-4"></div>
@@ -281,7 +280,7 @@ const AskQuestionCard = () => {
         disabled={loading || !question.trim()}
         className={`rounded-xl py-2 px-4 font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
           isDark
-            ? "bg-zinc-900 text-zinc-100 hover:bg-zinc-800 disabled:bg-zinc-200 disabled:text-zinc-500 border border-zinc-300"
+            ? "bg-zinc-900 text-white hover:bg-blue-500 disabled:bg-black disabled:text-white disabled:text- border border-zinc-300"
             : "bg-zinc-900 text-zinc-100 hover:bg-zinc-800 disabled:bg-zinc-200 disabled:text-zinc-500"
         }`}
       >

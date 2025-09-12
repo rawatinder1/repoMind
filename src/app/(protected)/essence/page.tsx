@@ -11,10 +11,12 @@ import { FileText, Download, GitBranch, Copy, RefreshCw, AlertCircle } from 'luc
 import { useTheme } from 'next-themes'
 import { autoDoc, generateMermaidDiagram } from './actions';
 import mermaid from 'mermaid';
+import SequenceDiagramsPitchCard from './topCard';
 import { toast } from 'sonner'; // Assuming you have sonner for toasts
 import { MessageSquare } from 'lucide-react';
 const PromptCard = () => {
     const { resolvedTheme } = useTheme();
+    const [showHelp, setShowHelp] = React.useState(false);
     const isDark = resolvedTheme === "dark";
     const { project } = useProject();
     const [open, setOpen] = React.useState(false);
@@ -166,11 +168,12 @@ const PromptCard = () => {
 
     // Allow reopening dialog if there's content or loading
     const canOpenDialog = hasContent || loading;
+    
+ 
+        
 
     return (
-        <>
-       
-
+               <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="sm:max-w-[80vw] max-h-[85vh] backdrop-blur-3xl bg-white/80 dark:bg-black/60 border border-white/20 dark:border-white/10 shadow-2xl rounded-3xl">
                     <DialogHeader>
@@ -306,13 +309,23 @@ const PromptCard = () => {
                     </div>
                 </DialogContent>
             </Dialog>
-            
-            <Card className="col-span-3 shadow-lg rounded-2xl border-none bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800 transition-all">
+            <SequenceDiagramsPitchCard/>
+            <Card className="mt-6 col-span-3 shadow-lg rounded-2xl border-none bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800 transition-all">
                 <CardHeader className="pb-2">
                     <CardTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-xl font-semibold text-zinc-800 dark:text-zinc-100">
                             <FileText className="h-5 w-5" />
                             Prompt Card
+                            
+                            {/* Help Button */}
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setShowHelp(!showHelp)}
+                                className="ml-2 w-6 h-6 p-0 rounded-full bg-blue-100/50 dark:bg-blue-900/30 hover:bg-blue-200/70 dark:hover:bg-blue-800/50 transition-all duration-200"
+                            >
+                                <span className="text-blue-600 dark:text-blue-400 text-sm font-bold">?</span>
+                            </Button>
                         </div>
                         
                         {/* Button to reopen dialog if there's content */}
@@ -330,6 +343,61 @@ const PromptCard = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    {/* Animated Help Card */}
+                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${showHelp ? 'max-h-96 opacity-100 mb-6' : 'max-h-0 opacity-0'}`}>
+                        <div className="relative overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 shadow-lg">
+                            {/* Glass background with gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-yellow-500/10 backdrop-blur-xl"></div>
+                            
+                            {/* Content */}
+                            <div className="relative p-6">
+                                <div className="space-y-4">
+                                    {/* Usage Tips */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-600/20 backdrop-blur-sm border border-white/20">
+                                            <span className="text-orange-600 dark:text-orange-400 text-sm font-bold">💡</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                                                How to Use
+                                            </h4>
+                                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                                Be specific about what you want documented. Mention file types, sections, 
+                                                or particular features. For diagrams, describe the flow or process you want visualized.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Best Practices */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-600/20 backdrop-blur-sm border border-white/20">
+                                            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">✨</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                                                Best Results
+                                            </h4>
+                                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                                Include context like "for new developers", "technical specifications", 
+                                                or "user-facing documentation" to get tailored output that matches your audience.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Example Prompts */}
+                                    <div className="pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
+                                        <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Example Prompts:</p>
+                                        <div className="space-y-1 text-xs text-gray-500 dark:text-gray-500">
+                                            <div>"Document the payment processing workflow with installation steps"</div>
+                                            <div>"Create technical specs for the database schema"</div>
+                                            <div>"Show user authentication flow from login to dashboard"</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <form onSubmit={onSubmit} className="flex flex-col gap-4">
                         <Textarea
                             placeholder="Enter your prompt here..."
@@ -392,6 +460,7 @@ const PromptCard = () => {
                 }
             `}</style>
         </>
+
     );
 }
 

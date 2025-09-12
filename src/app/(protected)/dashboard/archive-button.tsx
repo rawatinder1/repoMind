@@ -6,7 +6,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import useRefetch from '@/hooks/use-refetch';
-
+import { Button as StatefulButton} from "@/components/ui/stateful-button";
 const ArchiveButton = () => {
   const archiveProject = api.project.archiveProject.useMutation();
   const { projectId } = useProject();
@@ -31,11 +31,10 @@ const ArchiveButton = () => {
   };
 
   return (
-    <Button disabled={archiveProject.isPending}
+    <StatefulButton disabled={archiveProject.isPending}
     onClick={handleArchive}
-    size='sm'
-    variant='destructive'
-    >Archive</Button>
+    
+    >Archive</StatefulButton>
     
   );
 };

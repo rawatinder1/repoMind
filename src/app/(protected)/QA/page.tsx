@@ -12,7 +12,7 @@ import { MessageSquare, Calendar, Trash2, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import AskQuestionCard from '../dashboard/ask-question-card';
 import CodeReferences from '../dashboard/code-references';
-
+import QnAPitchCard from './pitchcard'
 const QAPage = () => {
   const { projectId } = useProject();
   const { resolvedTheme } = useTheme();
@@ -45,6 +45,7 @@ const QAPage = () => {
 
   return (
     <div className="space-y-6">
+      <QnAPitchCard/>
       <AskQuestionCard />
       
       <div className="space-y-4">
@@ -80,13 +81,13 @@ const QAPage = () => {
             </Card>
           ) : (
             questions.map((question) => (
-              <Card
+<Card
                 key={question.id}
                 className={`${
                   isDark
-                    ? "bg-zinc-800 text-zinc-100 border border-zinc-800"
-                    : "bg-green-100 text-zinc-900 border border-zinc-200"
-                } rounded-2xl shadow-sm hover:shadow-md transition-all duration-200`}
+                    ? "bg-zinc-800 text-zinc-100 border border-zinc-800 shadow-sm hover:shadow-[0_10px_25px_-5px_rgba(255,255,255,0.3),0_4px_6px_-2px_rgba(255,255,255,0.2)]"
+                    : "bg-green-100 text-zinc-900 border border-green-600 shadow-sm hover:shadow-[0_15px_35px_-5px_rgba(34,197,94,0.4),0_8px_15px_-3px_rgba(34,197,94,0.3)]"
+                } rounded-2xl hover:-translate-y-1 transform transition-all duration-300 ease-in-out cursor-pointer`}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
@@ -113,12 +114,11 @@ const QAPage = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            
                             className={`${
                               isDark
                                 ? "border-blue-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
                                 : "border-zinc-300 bg-blue-100 hover:bg-zinc-100 text-zinc-600"
-                            } rounded-lg transition-all duration-200`}
+                            } rounded-lg transition-all duration-200 hover:scale-105`}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -197,7 +197,11 @@ const QAPage = () => {
                           isDark
                             ? "border-red-400 bg-red-900/20 hover:bg-red-900/30 text-red-300"
                             : "border-red-400 bg-red-50 hover:bg-red-100 text-red-600"
-                        } rounded-lg transition-all duration-200`}
+                        } rounded-lg transition-all duration-200 hover:scale-105 ${
+                          deleteQuestion.isPending 
+                            ? "opacity-50 cursor-not-allowed hover:scale-100" 
+                            : ""
+                        }`}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
