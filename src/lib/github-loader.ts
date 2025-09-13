@@ -61,7 +61,7 @@ function generateCuid(): string {
     const randomPart = Math.random().toString(36).substring(2, 15);
     return `c${timestamp}${randomPart}`.substring(0, 25);
 }
-// Updated Solution with Batching
+// Updated  with Batching
 export const indexGithubRepo = async (projectId: string, githubUrl: string, githubToken?: string) => {
     const token = githubToken ?? process.env.GITHUB_TOKEN;
     

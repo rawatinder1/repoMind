@@ -2,7 +2,7 @@ import {string, z} from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 import { pollCommits } from "@/lib/github";
 import { indexGithubRepo } from "@/lib/github-loader";
-import { XOctagon } from "lucide-react";
+import { sendMail } from "@/lib/mailer";
 const projectRouter = createTRPCRouter({
     createProject: protectedProcedure.input(
         z.object({
@@ -15,10 +15,10 @@ const projectRouter = createTRPCRouter({
             throw new Error("User ID is required");
         }
 
-        // Find the user in your database using Clerk ID
+       
         const dbUser = await ctx.db.user.findUnique({
             where: {
-                clerkId: ctx.user.userId // Use clerkId field to find the user
+                clerkId: ctx.user.userId 
             }
         });
 
@@ -32,7 +32,7 @@ const projectRouter = createTRPCRouter({
                 name: input.name,
                 userProjects: {
                     create: {
-                        userId: dbUser.id // Use the database user ID
+                        userId: dbUser.id 
                     }
                 }
             }
@@ -48,10 +48,10 @@ const projectRouter = createTRPCRouter({
             throw new Error("User ID is required");
         }
 
-        // Find the user in your database using Clerk ID
+        
         const dbUser = await ctx.db.user.findUnique({
             where: {
-                clerkId: ctx.user.userId // Use clerkId field to find the user
+                clerkId: ctx.user.userId 
             }
         });
 
@@ -91,10 +91,10 @@ const projectRouter = createTRPCRouter({
                     throw new Error("User ID is required");
                 }
 
-                // Find the user in your database using Clerk ID
+                
                 const dbUser = await ctx.db.user.findUnique({
                     where: {
-                        clerkId: ctx.user.userId // Use clerkId field to find the user
+                        clerkId: ctx.user.userId 
                     }
                 });
                 console.log("Saving answer for user:", dbUser);
@@ -109,7 +109,7 @@ const projectRouter = createTRPCRouter({
                         fileReference: input.fileReferences,
                         projectId: input.projectId,
                         question: input.question,
-                        userId: dbUser.id // Use the database user ID, not Clerk ID
+                        userId: dbUser.id 
                     }
                 }).catch((err) => {
                     console.error("Error saving answer:", err);
@@ -145,7 +145,57 @@ const projectRouter = createTRPCRouter({
         }),
         getTeamMembers:protectedProcedure.input(z.object({projectId:z.string()})).query(async ({ctx,input})=>{
             return await ctx.db.userToProject.findMany({where:{projectId:input.projectId},include:{user:true}})
+        }),
+       sendEmail: protectedProcedure
+  .input(z.object({
+    to: z.string(),
+    projectId: z.string(),
+    projectLink: z.string()
+  }))
+  .mutation(async ({ ctx, input }) => {
+    if (!ctx.user.userId) {
+      throw new Error("User ID is required");
+    }
+
+    try {
+      // Single query to get both user and project
+      const [dbUser, project] = await Promise.all([
+        ctx.db.user.findUnique({
+          where: {
+            clerkId: ctx.user.userId
+          }
+        }),
+        ctx.db.project.findUnique({
+          where: {
+            id: input.projectId,
+          }
         })
+      ]);
+
+      if (!dbUser) {
+        throw new Error("User not found");
+      }
+
+      if (!project) {
+        throw new Error("Project not found");
+      }
+
+      const senderName = `${dbUser.firstName || ""} ${dbUser.lastName || ""}`.trim() || "A colleague";
+
+      await sendMail({
+        to: input.to,
+        senderName,
+        projectName: project.name || "Untitled Project",
+        projectlink: input.projectLink,
+      });
+
+      return { success: true };
+
+    } catch (error) {
+      console.error("Send email error:", error);
+      throw new Error("Failed to send invitation email");
+    }
+  })
 
     });
     

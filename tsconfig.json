@@ -37,6 +37,6 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts"
-  ],
+, "src/app/(protected)/create/flask.jsx", "src/app/(protected)/create/flask.jsx"  ],
   "exclude": ["node_modules"]
 }
