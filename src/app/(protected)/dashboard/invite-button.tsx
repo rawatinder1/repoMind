@@ -323,7 +323,7 @@ const InviteButton = () => {
                                                     placeholder="colleague@company.com"
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
-                                                    className="apple-input rounded-lg h-12 text-sm pr-10"
+                                                    className="apple-input rounded-lg h-12 text-sm pr-10 text-gray-900"
                                                 />
                                                 {emailSent && (
                                                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
