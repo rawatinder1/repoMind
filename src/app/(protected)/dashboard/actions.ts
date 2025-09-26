@@ -58,7 +58,7 @@ export async function askQuestion(projectId: string, question: string) {
       }
 
       const { textStream } = await streamText({
-        model: google('gemini-1.5-flash'),
+        model: google('gemini-2.0-flash'),
         prompt: `You are a senior software engineer and expert code reviewer.
 
 Your task is to answer the user's programming question strictly based on the provided context.

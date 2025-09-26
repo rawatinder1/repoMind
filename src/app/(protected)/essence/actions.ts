@@ -51,7 +51,7 @@ export async function autoDoc(projectId: string, prompt?: string) {
     
 
         const { textStream } = await streamText({
-        model: google("gemini-1.5-flash"),
+        model: google("gemini-2.0-flash"),
         prompt: `You are a senior software architect and expert technical writer.  
         Your task is to generate **comprehensive professional documentation** for the given codebase using only the provided summaries.  
 
@@ -141,7 +141,7 @@ export async function generateMermaidDiagram(projectId: string, prompt?: string)
         }
 
         const { text } = await streamText({
-            model: google("gemini-1.5-flash"),
+            model: google("gemini-2.0-flash"),
             prompt: `You are a senior software architect and expert in system design diagrams.
 Your task is to generate a **Mermaid.js sequence diagram** that visualizes the interactions and flow between components in the given codebase.
 
